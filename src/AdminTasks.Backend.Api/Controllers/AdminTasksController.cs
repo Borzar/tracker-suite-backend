@@ -7,21 +7,21 @@ using Models.Output;
 namespace AdminTareas.BackEnd.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
-public class AdminTasksController : ControllerBase
+// [Route("api/[controller]")]
+[Route("api/tasks")]
+public class TaskController : ControllerBase
 {
-    private readonly ILogger<AdminTasksController> _logger;
+    private readonly ILogger<TaskController> _logger;
     private readonly IMediator _mediator;
 
-    public AdminTasksController(ILogger<AdminTasksController> logger, IMediator mediator)
+    public TaskController(ILogger<TaskController> logger, IMediator mediator)
     {
         _logger = logger;
         _mediator = mediator;
     }
 
     [HttpPost]
-    [Route("CreateTask")]
-    public async Task<ActionResult<JsonResponse>> CreateTask(InputCreateTask request)
+    public async Task<ActionResult<JsonResponse>> Create(InputCreateTask request)
     {
         var response = await _mediator.Send(request);
         if (response is null)
@@ -32,10 +32,10 @@ public class AdminTasksController : ControllerBase
 
     }
 
-    [HttpPatch]
-    [Route("UpdateTask")]
-    public async Task<ActionResult<JsonResponse>> UpdateTask(InputUpdateTask request)
+    [HttpPatch("{id}")]
+    public async Task<ActionResult<JsonResponse>> Update(int id, InputUpdateTask request)
     {
+        request.Id = id;
         var response = await _mediator.Send(request);
         if (response is null)
         {
@@ -45,10 +45,10 @@ public class AdminTasksController : ControllerBase
 
     }
 
-    [HttpDelete]
-    [Route("DeleteTask")]
-    public async Task<ActionResult<JsonResponse>> DeleteTask(InputDeleteTask request)
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<JsonResponse>> Delete(int id)
     {
+        var request = new InputDeleteTask { Id = id };
         var response = await _mediator.Send(request);
         if (response is null)
         {
@@ -58,10 +58,10 @@ public class AdminTasksController : ControllerBase
 
     }
 
-    [HttpPost]
-    [Route("QueryTask")]
-    public async Task<ActionResult<JsonResponse>> QueryTask(InputQueryTask request)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<JsonResponse>> GetById(int id)
     {
+        var request = new InputQueryTask { Id = id };
         var response = await _mediator.Send(request);
         if (response is null)
         {
@@ -72,8 +72,7 @@ public class AdminTasksController : ControllerBase
     }
 
     [HttpGet]
-    [Route("GetTasks")]
-    public async Task<ActionResult<JsonResponse>> GetTasks()
+    public async Task<ActionResult<JsonResponse>> GetAll()
     {
         var request = new InputGetTasks();
         var response = await _mediator.Send(request);
