@@ -35,7 +35,11 @@ builder.Services.AddMediatR(cfg =>
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+    options.UseNpgsql(connectionString)
+);
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(connectionString)
 );
 
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();

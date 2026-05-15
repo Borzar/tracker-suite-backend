@@ -13,6 +13,13 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Tarea> Tareas { get; set; }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Tarea>().ToTable("tareas");
+    }
+
 }
 
 public class Tarea

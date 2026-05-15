@@ -1,40 +1,45 @@
-version: '3'
+# version: '3'
 
 services:
-  db:
-    container_name: mysql-db
-    image: mysql:oraclelinux9
-    volumes: 
-      - ./mysql-volumes:/var/lib/mysql
+  postgres:
+    container_name: postgres_db
+    image: postgres:16
+    restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASS}
-      - MYSQL_DATABASE=${DB_NAME}
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: task_db
     ports:
-      - 3306:3306
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
-  phpmyadmin:
-    container_name: phpmyadmin-t
-    depends_on:
-      - db
-    image: phpmyadmin:apache
-    ports:
-      - 8080:80
-    environment:
-      - PMA_ARBITRARY=1
+  pgadmin:
+      image: dpage/pgadmin4
+      container_name: pgadmin4
+      restart: always
+      environment:
+        PGADMIN_DEFAULT_EMAIL: admin@email.com
+        PGADMIN_DEFAULT_PASSWORD: admin123
+      ports:
+        - "5050:80"
+      volumes:
+        - pgadmin_data:/var/lib/pgadmin
+      depends_on:
+        - postgres
 
-  api:
-    container_name: admintasks.backend.api
-    depends_on:
-      db:
-        condition: service_healthy
-    # build: .
-    image: jadomiz/admintasks.backend.api:0.0.1
-    ports:
-      - 8085:8080
-    environment:
-      - ConnectionStrings__DefaultConnection=Server=${DB_SERVER};Database=${DB_NAME};User=${DB_USER};Password=${DB_PASS};
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+  # api:
+  #   container_name: admintasks.backend.api
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   # build: .
+  #   image: jadomiz/admintasks.backend.api:0.0.1
+  #   ports:
+  #     - 8085:8080
+  #   environment:
+  #     - ConnectionStrings__DefaultConnection=Server=${DB_SERVER};Database=${DB_NAME};User=${DB_USER};Password=${DB_PASS};
