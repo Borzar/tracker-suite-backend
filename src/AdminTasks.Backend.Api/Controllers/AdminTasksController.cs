@@ -33,7 +33,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<ActionResult<JsonResponse>> Update(int id, InputUpdateTask request)
+    public async Task<ActionResult<JsonResponse>> Update(Guid id, InputUpdateTask request)
     {
         request.Id = id;
         var response = await _mediator.Send(request);
@@ -46,7 +46,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<JsonResponse>> Delete(int id)
+    public async Task<ActionResult<JsonResponse>> Delete(Guid id)
     {
         var request = new InputDeleteTask { Id = id };
         var response = await _mediator.Send(request);
@@ -59,7 +59,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<JsonResponse>> GetById(int id)
+    public async Task<ActionResult<JsonResponse>> GetById(Guid id)
     {
         var request = new InputQueryTask { Id = id };
         var response = await _mediator.Send(request);

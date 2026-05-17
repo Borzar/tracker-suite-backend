@@ -5,5 +5,5 @@ namespace Models.Input;
 
 public class InputDeleteTask : IRequest<JsonResponse>
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 }

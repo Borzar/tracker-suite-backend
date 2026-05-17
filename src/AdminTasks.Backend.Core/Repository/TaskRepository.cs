@@ -1,32 +1,32 @@
 using System.Runtime.InteropServices;
-using DBContext.ApplicationDbContext;
+using AdminTasks.Backend.Core.Models;
 using Dto.Output;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Models.Input;
 using Repository.IRepository.ITaskRepository;
-
 namespace Repository.TaskRepository;
 
 public class TaskRepository : ITaskRepository
 {
-    private readonly ApplicationDbContext _context;
+    private readonly TaskDbContext _context;
 
-    public TaskRepository(ApplicationDbContext context)
+    public TaskRepository(TaskDbContext context)
     {
         _context = context;
     }
 
-    public async Task<JsonResponseDto> CreateTask(Tarea inputDto)
+    public async Task<JsonResponseDto> CreateTask(TaskItem inputDto)
     {
-        await _context.Tareas.AddAsync(inputDto);
+        await _context.Tasks.AddAsync(inputDto);
         await _context.SaveChangesAsync();
         return new JsonResponseDto { StatusDto = "Success", DescriptionDto = "", ResultDto = new List<TaskOutputDto>() };
     }
+    
 
-    public async Task<JsonResponseDto> UpdateTask(Tarea inputDto)
+    public async Task<JsonResponseDto> UpdateTask(TaskItem inputDto)
     {
-        var existingTaskDto = await _context.Tareas.FindAsync(inputDto.Id);
+        var existingTaskDto = await _context.Tasks.FindAsync(inputDto.Id);
 
         if (existingTaskDto == null)
         {
@@ -38,38 +38,38 @@ public class TaskRepository : ITaskRepository
             };
         }
 
-        if (!string.IsNullOrWhiteSpace(inputDto.Titulo))
+        if (!string.IsNullOrWhiteSpace(inputDto.Title))
         {
-            existingTaskDto.Titulo = inputDto.Titulo.Trim();
+            existingTaskDto.Title = inputDto.Title.Trim();
         };
 
-        if (!string.IsNullOrWhiteSpace(inputDto.Descripcion))
+        if (!string.IsNullOrWhiteSpace(inputDto.Description))
         {
-            existingTaskDto.Descripcion = inputDto.Descripcion.Trim();
+            existingTaskDto.Description = inputDto.Description.Trim();
         };
 
         await _context.SaveChangesAsync();
         return new JsonResponseDto { StatusDto = "Success", DescriptionDto = "", ResultDto = new List<TaskOutputDto>() };
     }
 
-    public async Task<JsonResponseDto> DeleteTask(Tarea inputDto)
+    public async Task<JsonResponseDto> DeleteTask(TaskItem inputDto)
     {
-        var existingTaskDto = await _context.Tareas.FindAsync(inputDto.Id);
-        _context.Tareas.Remove(existingTaskDto);
+        var existingTaskDto = await _context.Tasks.FindAsync(inputDto.Id);
+        _context.Tasks.Remove(existingTaskDto);
         await _context.SaveChangesAsync();
 
         return new JsonResponseDto { StatusDto = "Success", DescriptionDto = "", ResultDto = new List<TaskOutputDto>() };
     }
 
-    public async Task<JsonResponseDto> QueryTask(Tarea inputDto)
+    public async Task<JsonResponseDto> QueryTask(TaskItem inputDto)
     {
-        var existingTaskDto = await _context.Tareas.FindAsync(inputDto.Id);
+        var existingTaskDto = await _context.Tasks.FindAsync(inputDto.Id);
 
         var taskDto = new TaskOutputDto
         {
             IdDto = existingTaskDto.Id,
-            TitleDto = existingTaskDto.Titulo,
-            DescriptionDto = existingTaskDto.Descripcion
+            TitleDto = existingTaskDto.Title,
+            DescriptionDto = existingTaskDto.Description
         };
 
         return new JsonResponseDto { StatusDto = "Success", DescriptionDto = "", ResultDto = new List<TaskOutputDto> { taskDto } };
@@ -79,15 +79,15 @@ public class TaskRepository : ITaskRepository
     {
         var tasksDto = new List<TaskOutputDto>(); 
 
-        var taskListDto = await _context.Tareas.Where(p => p.Id != 0).ToListAsync();
+        var taskListDto = await _context.Tasks.ToListAsync();
 
         foreach (var tarea in taskListDto)
         {
             tasksDto.Add(new TaskOutputDto
             {
                 IdDto = tarea.Id,
-                TitleDto = tarea.Titulo,
-                DescriptionDto = tarea.Descripcion
+                TitleDto = tarea.Title,
+                DescriptionDto = tarea.Description
             });
 
         };

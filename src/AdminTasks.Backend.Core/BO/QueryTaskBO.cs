@@ -1,4 +1,4 @@
-using DBContext.ApplicationDbContext;
+using AdminTasks.Backend.Core.Models;
 using Dto.Output;
 using MediatR;
 using Models.Input;
@@ -17,7 +17,7 @@ public class QueryTaskBO : IRequestHandler<InputQueryTask, JsonResponse>
     public async Task<JsonResponse> Handle(InputQueryTask request, CancellationToken cancellationToken)
     {
 
-        var inputTask = new Tarea();
+        var inputTask = new TaskItem();
 
         try
         {

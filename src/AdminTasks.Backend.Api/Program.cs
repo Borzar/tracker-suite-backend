@@ -1,11 +1,11 @@
 using AutoMapper;
-using DBContext.ApplicationDbContext;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Models.Input;
 using Repository.IRepository.ITaskRepository;
 using Repository.TaskRepository;
 using DotNetEnv;
+using AdminTasks.Backend.Core.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,13 +34,13 @@ builder.Services.AddMediatR(cfg =>
 );
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<TaskDbContext>(options =>
     options.UseNpgsql(connectionString)
 );
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString)
-);
+// builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//     options.UseNpgsql(connectionString)
+// );
 
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 

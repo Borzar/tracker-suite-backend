@@ -1,4 +1,4 @@
-using DBContext.ApplicationDbContext;
+using AdminTasks.Backend.Core.Models;
 using MediatR;
 using Models.Input;
 using Models.Output;
@@ -16,19 +16,19 @@ public class UpdateTaskBO : IRequestHandler<InputUpdateTask, JsonResponse>
     public async Task<JsonResponse> Handle(InputUpdateTask request, CancellationToken cancellationToken)
     {
 
-        var inputTask = new Tarea();
+        var inputTask = new TaskItem();
 
         try
         {
 
             if (!string.IsNullOrWhiteSpace(request.Title))
             {
-                inputTask.Titulo = request.Title.Trim();
+                inputTask.Title = request.Title.Trim();
             };
 
             if (!string.IsNullOrWhiteSpace(request.Description))
             {
-                inputTask.Descripcion = request.Description.Trim();
+                inputTask.Description = request.Description.Trim();
             };
 
             inputTask.Id = request.Id;

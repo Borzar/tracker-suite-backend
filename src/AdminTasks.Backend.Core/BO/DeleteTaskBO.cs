@@ -1,4 +1,4 @@
-using DBContext.ApplicationDbContext;
+using AdminTasks.Backend.Core.Models;
 using MediatR;
 using Models.Input;
 using Models.Output;
@@ -16,7 +16,7 @@ public class DeleteTaskBO : IRequestHandler<InputDeleteTask, JsonResponse>
     public async Task<JsonResponse> Handle(InputDeleteTask request, CancellationToken cancellationToken)
     {
 
-        var inputTask = new Tarea();
+        var inputTask = new TaskItem();
 
         try
         {

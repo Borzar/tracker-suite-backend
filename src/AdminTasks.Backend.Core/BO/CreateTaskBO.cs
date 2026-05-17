@@ -1,4 +1,4 @@
-using DBContext.ApplicationDbContext;
+using AdminTasks.Backend.Core.Models;
 using MediatR;
 using Models.Input;
 using Models.Output;
@@ -16,12 +16,13 @@ public class CreateTaskBO : IRequestHandler<InputCreateTask, JsonResponse>
     public async Task<JsonResponse> Handle(InputCreateTask request, CancellationToken cancellationToken)
     {
 
-        var inputTask = new Tarea();
+        var inputTask = new TaskItem();
 
         try
         {
-            inputTask.Titulo = request.Title;
-            inputTask.Descripcion = request.Description;
+            inputTask.Title = request.Title;
+            inputTask.Description = request.Description;
+            inputTask.UserId = request.UserId;
 
             var resultDto = await _ITaskRepository.CreateTask(inputTask);
 
