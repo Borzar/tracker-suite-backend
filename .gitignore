@@ -2,7 +2,8 @@
 mysql-volumes/
 
 #  Variables de entorno
-.env
+TrackerSuite.Api/.env
+**/.env
 
 # Archivos de compilación
 bin/
