@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackerSuite.Core", "Tracke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackerSuite.Api", "TrackerSuite.Api\TrackerSuite.Api.csproj", "{DBA0067E-1BC4-4411-8FC9-C7AC9719C7FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackerSuite.Tests", "TrackerSuite.Tests\TrackerSuite.Tests.csproj", "{81A4802C-9A17-42BD-9BC4-2860F38A8AE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{DBA0067E-1BC4-4411-8FC9-C7AC9719C7FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBA0067E-1BC4-4411-8FC9-C7AC9719C7FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBA0067E-1BC4-4411-8FC9-C7AC9719C7FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81A4802C-9A17-42BD-9BC4-2860F38A8AE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81A4802C-9A17-42BD-9BC4-2860F38A8AE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81A4802C-9A17-42BD-9BC4-2860F38A8AE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81A4802C-9A17-42BD-9BC4-2860F38A8AE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
