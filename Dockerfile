@@ -1,28 +1,38 @@
-# Multi-stage build 
-# Etapa 1: Compilación (Build)
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
-
-# Copiamos los archivos del proyecto
-# dotnet restore => descargar e instalarlas dependencias.
-COPY src/AdminTasks.Backend.Api/*.csproj ./AdminTasks.Backend.Api/
-RUN dotnet restore AdminTasks.Backend.Api/AdminTasks.Backend.Api.csproj
-
-# Copiamos el resto del código y compilamos
-# RUN dotnet publish -c => Indica al compilador que aplique todas las optimizaciones de código.
-# -o /app => Especifica el directorio de salida para los archivos publicados.
-COPY . .
-RUN dotnet publish src/AdminTasks.Backend.Api/AdminTasks.Backend.Api.csproj -c Release -o /app/publish /p:UseAppHost=false
-
-# Etapa 2: Etapa de ejecución (Runtime)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+# ==========================================
+# ETAPA 1: Base de compilación y restauración
+# DESCARGA UNA IMAGEN OFICIAL DE .NET 8 SDK.
+# ==========================================
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS compilation-stage
 WORKDIR /app
+# Copiar el código fuente y restaurar dependencias
+COPY ./src .
+RUN dotnet restore
 
-# Copiamos desde la etapa anterior
-COPY --from=build /app/publish .
+# ==========================================
+# ETAPA 2: Ejecución de Tests 🧪
+# ==========================================
+FROM compilation-stage AS test-stage
+# Mantiene la ubicacion anterior /app
+# Ejecuta los tests. Si uno solo falla, devuelve un código de salida diferente de 0 
+# y Docker rompe el build aquí mismo. (Realease: optimiza el codigo para prod. Mas liviano)
+RUN dotnet test --no-restore -c Release
 
-# Puerto expuesto (el mismo que usa Kestrel por defecto)
+# ==========================================
+# ETAPA 3: Publicación (Solo llega aquí si los tests pasaron)
+# ==========================================
+FROM test-stage AS publish-stage
+RUN dotnet publish -c Release -o out
+
+# ==========================================
+# ETAPA 4: Runtime (Imagen final ligera)
+# AHORA COMIENZA UNA NUEVA IMAGEN.
+# CONTIENE EL RUNTIME DE .NET ASP.NET CORE
+# NO TIENE: SDK COMPILADOR HERRAMIENTAS DE DESARROLLO POR ESO ES MÁS PEQUEÑA.
+# ==========================================
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+# Ojo: Ahora copiamos desde "publish-stage"
+COPY --from=publish-stage /app/out .
+
 EXPOSE 8080
-
-# Define el comando principal
-ENTRYPOINT ["dotnet", "AdminTasks.Backend.Api.dll"]
+ENTRYPOINT ["dotnet", "TrackerSuite.Api.dll"]
