@@ -22,6 +22,7 @@ public class GetByIdBO : IRequestHandler<InputQueryTaskDto, JsonResponseDto>
         try
         {
             inputTask.Id = request.Id;
+            inputTask.UserId = request.UserId;
 
             var result = await _ITaskRepository.GetById(inputTask);
 

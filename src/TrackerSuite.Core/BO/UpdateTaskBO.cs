@@ -27,7 +27,8 @@ public class UpdateTaskBO : IRequestHandler<InputUpdateTaskDto, JsonResponseDto>
             {
                 Id = request.Id,
                 Title = request.Title,
-                Description = request.Description
+                Description = request.Description,
+                UserId = request.UserId
             };
 
             var result = await _ITaskRepository.UpdateTask(inputTask);

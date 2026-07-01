@@ -22,7 +22,8 @@ public class DeleteTaskBO : IRequestHandler<InputDeleteTaskDto, JsonResponseDto>
 
             var inputTask = new TaskItem
             {
-                Id = request.Id
+                Id = request.Id,
+                UserId = request.UserId
             };
 
             var result = await _ITaskRepository.DeleteTask(inputTask);

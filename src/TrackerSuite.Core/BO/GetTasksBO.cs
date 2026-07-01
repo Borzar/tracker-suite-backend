@@ -2,6 +2,7 @@ using MediatR;
 using TrackerSuite.Core.Dto.Input;
 using TrackerSuite.Core.Dto.Output;
 using TrackerSuite.Core.Enums;
+using TrackerSuite.Core.Models.Input;
 using TrackerSuite.Core.Repository.IRepository.ITaskRepository;
 
 public class GetTasksBO : IRequestHandler<InputGetTasksDto, JsonResponseDto>
@@ -18,8 +19,9 @@ public class GetTasksBO : IRequestHandler<InputGetTasksDto, JsonResponseDto>
         
         try
         {
+            var inputTask = new TaskItem { UserId = request.UserId };
 
-            var result = await _ITaskRepository.GetTasks(request);
+            var result = await _ITaskRepository.GetTasks(inputTask);
 
             switch (result.Result)
             {

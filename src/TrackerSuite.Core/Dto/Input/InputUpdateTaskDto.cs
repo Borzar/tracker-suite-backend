@@ -10,4 +10,6 @@ public class InputUpdateTaskDto : IRequest<JsonResponseDto>
     public string? Description { get; set; }
     [JsonIgnore]
     public Guid Id { get; set; }
+    [JsonIgnore]
+    public Guid UserId { get; set; }
 }

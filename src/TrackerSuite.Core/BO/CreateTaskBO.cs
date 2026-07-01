@@ -28,7 +28,7 @@ public class CreateTaskBO : IRequestHandler<InputCreateTaskDto, JsonResponseDto>
             {
                 Title = request.Title,
                 Description = request.Description,
-                UserId = Guid.Parse("90470204-56b6-4e30-8abf-804c9b0eba0e")
+                UserId = request.UserId
             };
 
             var result = await _ITaskRepository.CreateTask(inputTask);

@@ -27,7 +27,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<TaskUpdateResult> UpdateTask(TaskItem input)
     {
-        var existingTask = await _context.Tasks.FindAsync(input.Id);
+        var existingTask = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == input.Id && t.UserId == input.UserId);
 
         if (existingTask == null)
             return TaskUpdateResult.NotFound;
@@ -45,7 +45,8 @@ public class TaskRepository : ITaskRepository
 
     public async Task<TaskDeleteResult> DeleteTask(TaskItem input)
     {
-        var existingTask = await _context.Tasks.FindAsync(input.Id);
+        var existingTask = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == input.Id && t.UserId == input.UserId);
+
         if (existingTask == null)
             return TaskDeleteResult.NotFound;
 
@@ -59,7 +60,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<(TaskGetByIdResult Result, List<TaskItemOutput> Task)> GetById(TaskItem input)
     {
-        var existingTask = await _context.Tasks.FindAsync(input.Id);
+        var existingTask = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == input.Id && t.UserId == input.UserId);
 
         if (existingTask == null)
             return (TaskGetByIdResult.NotFound, null);
@@ -82,9 +83,9 @@ public class TaskRepository : ITaskRepository
 
     }
 
-    public async Task<(TaskGetTasksResult Result, List<TaskItemOutput> Task)> GetTasks(InputGetTasksDto input)
+    public async Task<(TaskGetTasksResult Result, List<TaskItemOutput> Task)> GetTasks(TaskItem input)
     {
-        var taskList = await _context.Tasks.ToListAsync();
+        var taskList = await _context.Tasks.Where(t => t.UserId == input.UserId).ToListAsync();
 
         if (taskList == null || taskList.Count == 0)
             return (TaskGetTasksResult.NotFound, null);

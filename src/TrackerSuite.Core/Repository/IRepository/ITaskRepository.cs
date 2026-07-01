@@ -11,5 +11,5 @@ public interface ITaskRepository
     public Task<TaskUpdateResult> UpdateTask(TaskItem input);
     public Task<TaskDeleteResult> DeleteTask(TaskItem input);
     public Task<(TaskGetByIdResult Result, List<TaskItemOutput> Task)> GetById(TaskItem input);
-    public Task<(TaskGetTasksResult Result, List<TaskItemOutput> Task)> GetTasks(InputGetTasksDto input);
+    public Task<(TaskGetTasksResult Result, List<TaskItemOutput> Task)> GetTasks(TaskItem input);
 }

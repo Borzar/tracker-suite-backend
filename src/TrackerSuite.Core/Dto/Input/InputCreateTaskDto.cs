@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using MediatR;
 using TrackerSuite.Core.Dto.Output;
 
@@ -7,4 +8,6 @@ public class InputCreateTaskDto : IRequest<JsonResponseDto>
 {
     public string? Title { get; set; }
     public string? Description { get; set; }
+    [JsonIgnore]
+    public Guid UserId { get; set; }
 }

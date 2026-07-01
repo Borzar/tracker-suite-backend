@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TrackerSuite.Core.Dto.Input;
 using TrackerSuite.Core.Dto.Output;
@@ -12,6 +13,7 @@ public class TaskItemController : ControllerBase
 {
     private readonly ILogger<TaskItemController> _logger;
     private readonly IMediator _mediator;
+    private Guid UserIdFromToken => Guid.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value);
 
     public TaskItemController(ILogger<TaskItemController> logger, IMediator mediator)
     {
@@ -20,8 +22,10 @@ public class TaskItemController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<JsonResponseDto>> Create(InputCreateTaskDto request)
     {
+        request.UserId = UserIdFromToken;
         var response = await _mediator.Send(request);
 
         return response.Status switch
@@ -34,10 +38,12 @@ public class TaskItemController : ControllerBase
 
     }
 
-    [HttpPatch("{id}")]
-    public async Task<ActionResult<JsonResponseDto>> Update(Guid id, InputUpdateTaskDto request)
+    [HttpPatch("{taskId}")]
+    [Authorize]
+    public async Task<ActionResult<JsonResponseDto>> Update(Guid taskId, InputUpdateTaskDto request)
     {
-        request.Id = id;
+        request.Id = taskId;
+        request.UserId = UserIdFromToken;
         var response = await _mediator.Send(request);
 
         return response.Status switch
@@ -50,10 +56,11 @@ public class TaskItemController : ControllerBase
 
     }
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<JsonResponseDto>> Delete(Guid id)
+    [HttpDelete("{taskId}")]
+    [Authorize]
+    public async Task<ActionResult<JsonResponseDto>> Delete(Guid taskId)
     {
-        var request = new InputDeleteTaskDto { Id = id };
+        var request = new InputDeleteTaskDto { Id = taskId, UserId = UserIdFromToken };
         var response = await _mediator.Send(request);
 
         return response.Status switch
@@ -65,10 +72,11 @@ public class TaskItemController : ControllerBase
         };
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<JsonResponseDto>> GetById(Guid id)
+    [HttpGet("{taskId}")]
+    [Authorize]
+    public async Task<ActionResult<JsonResponseDto>> GetById(Guid taskId)
     {
-        var request = new InputQueryTaskDto { Id = id };
+        var request = new InputQueryTaskDto { Id = taskId, UserId = UserIdFromToken };
         var response = await _mediator.Send(request);
 
         return response.Status switch
@@ -82,9 +90,10 @@ public class TaskItemController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<JsonResponseDto>> GetAll()
     {
-        var request = new InputGetTasksDto();
+        var request = new InputGetTasksDto { UserId = UserIdFromToken };
         var response = await _mediator.Send(request);
 
         return response.Status switch
